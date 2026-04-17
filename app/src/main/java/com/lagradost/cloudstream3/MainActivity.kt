@@ -31,12 +31,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.core.content.edit
 import androidx.core.net.toUri
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.children
 import androidx.core.view.get
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.core.view.marginStart
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -274,6 +277,8 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
 
         const val LAST_INSTAGRAM_DIALOG_SHOW_TIME = "last_instagram_dialog_show_time"
         const val INSTAGRAM_ALREADY_FOLLOWED = "instagram_already_followed"
+        const val LAST_TELEGRAM_DIALOG_SHOW_TIME = "last_telegram_dialog_show_time"
+        const val TELEGRAM_ALREADY_JOINED = "telegram_already_joined"
 
         /**
          * @return true if the str has launched an app task (be it successful or not)
@@ -501,6 +506,13 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
                 R.id.navigation_player
             ).contains(destination.id)
 
+        binding?.bannerContainer?.isVisible =
+            !listOf(
+                R.id.navigation_results_phone,
+                R.id.navigation_results_tv,
+                R.id.navigation_player
+            ).contains(destination.id)
+
         val isNavVisible = listOf(
             R.id.navigation_home,
             R.id.navigation_search,
@@ -560,6 +572,7 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
         binding?.apply {
             navRailView.isVisible = isNavVisible && isLandscape()
             navView.isVisible = isNavVisible && !isLandscape()
+            navViewContainer.isVisible = isNavVisible && !isLandscape()
             navHostFragment.apply {
                 val marginPx = resources.getDimensionPixelSize(R.dimen.nav_rail_view_width)
                 layoutParams = (navHostFragment.layoutParams as ViewGroup.MarginLayoutParams).apply {
@@ -1192,11 +1205,17 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
         val currentTime = System.currentTimeMillis()
 
         // Show only if setup is done and not already followed
-        if (!hasDoneSetup || alreadyFollowed) return
+        if (!hasDoneSetup || alreadyFollowed) {
+            showTelegramFollowDialog()
+            return
+        }
 
         // Show only if it's a new day (at least 24 hours passed) or first time (lastShowTime == 0)
         val oneDayMillis = 24 * 60 * 60 * 1000
-        if (lastShowTime != 0L && currentTime - lastShowTime < oneDayMillis) return
+        if (lastShowTime != 0L && currentTime - lastShowTime < oneDayMillis) {
+            showTelegramFollowDialog()
+            return
+        }
 
         val dialog = Dialog(this, R.style.DialogHalfFullscreen)
         val dialogView = layoutInflater.inflate(R.layout.instagram_follow_dialog, null)
@@ -1204,11 +1223,13 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
         val followButton = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.follow_button)
-        val dismissButton = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.dismiss_button)
+
         val alreadyFollowedCheckbox = dialogView.findViewById<CheckBox>(R.id.already_followed_checkbox)
 
-        dismissButton.setOnClickListener {
-            dialog.dismiss()
+
+
+        dialog.setOnDismissListener {
+            showTelegramFollowDialog()
         }
 
         // Only show checkbox if it's NOT the first time (lastShowTime != 0)
@@ -1242,6 +1263,65 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
 
         // Update last show time
         setKey(LAST_INSTAGRAM_DIALOG_SHOW_TIME, currentTime)
+
+        dialog.show()
+    }
+
+    private fun showTelegramFollowDialog() {
+        val alreadyJoined = getKey(TELEGRAM_ALREADY_JOINED, false) ?: false
+        val lastShowTime = getKey<Long>(LAST_TELEGRAM_DIALOG_SHOW_TIME) ?: 0L
+        val hasDoneSetup = getKey(HAS_DONE_SETUP_KEY, false) ?: false
+        val currentTime = System.currentTimeMillis()
+
+        // Show only if setup is done and not already joined
+        if (!hasDoneSetup || alreadyJoined) return
+
+        // Show only if it's a new day (at least 24 hours passed) or first time (lastShowTime == 0)
+        val oneDayMillis = 24 * 60 * 60 * 1000
+        if (lastShowTime != 0L && currentTime - lastShowTime < oneDayMillis) return
+
+        val dialog = Dialog(this, R.style.DialogHalfFullscreen)
+        val dialogView = layoutInflater.inflate(R.layout.telegram_follow_dialog, null)
+        dialog.setContentView(dialogView)
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        val joinButton = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.join_button)
+
+        val alreadyJoinedCheckbox = dialogView.findViewById<CheckBox>(R.id.already_joined_checkbox)
+
+
+
+        // Only show checkbox if it's NOT the first time (lastShowTime != 0)
+        if (lastShowTime != 0L) {
+            alreadyJoinedCheckbox.isVisible = true
+        }
+
+        alreadyJoinedCheckbox.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                joinButton.text = "DISMISS"
+            } else {
+                joinButton.text = "JOIN NOW"
+            }
+        }
+
+        joinButton.setOnClickListener {
+            if (alreadyJoinedCheckbox.isChecked) {
+                setKey(TELEGRAM_ALREADY_JOINED, true)
+                dialog.dismiss()
+            } else {
+                // Open Telegram URL
+                try {
+                    val intent = Intent(Intent.ACTION_VIEW, "https://t.me/pluginstreamofficial".toUri())
+                    startActivity(intent)
+                } catch (e: Exception) {
+                    logError(e)
+                }
+                dialog.dismiss()
+            }
+        }
+
+        // Update last show time
+        setKey(LAST_TELEGRAM_DIALOG_SHOW_TIME, currentTime)
 
         dialog.show()
     }
@@ -1348,12 +1428,22 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
         }
 
         binding?.apply {
-            fixSystemBarsPadding(
-                navView,
-                heightResId = R.dimen.nav_view_height,
-                padTop = false,
-                overlayCutout = false
-            )
+            // Apply insets to the container for floating bottom nav
+            ViewCompat.setOnApplyWindowInsetsListener(navViewContainer) { view, windowInsets ->
+                val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+                // Set the container margins based on system bars for modern floating look
+                // This removes the "extra space" below the card while keeping it floating above the system bars
+                view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                    // Margin should be system bar height + our desired floating margin (12dp)
+                    // If system bar height is 0 (gesture nav), it will still have 12dp margin
+                    bottomMargin = insets.bottom + 12.toPx
+                    leftMargin = insets.left + 24.toPx
+                    rightMargin = insets.right + 24.toPx
+                }
+
+                WindowInsetsCompat.CONSUMED
+            }
 
             fixSystemBarsPadding(
                 navRailView,
@@ -1734,20 +1824,13 @@ class MainActivity : AppCompatActivity(), ColorPickerDialogListener, BiometricCa
         val navController = navHostFragment.navController
 
         navController.addOnDestinationChangedListener { _: NavController, navDestination: NavDestination, bundle: Bundle? ->
+            updateNavBar(navDestination)
             // Intercept search and add a query
             if (navDestination.id == R.id.navigation_setup_language || navDestination.id == R.id.navigation_setup_extensions || navDestination.id == R.id.navigation_setup_provider_languages || navDestination.id == R.id.navigation_setup_media || navDestination.id == R.id.navigation_setup_layout) {
-                binding?.bannerContainer?.visibility = View.GONE
-                binding?.navView?.visibility = View.GONE
-                binding?.navRailView?.visibility = View.GONE
-            } else {
-                binding?.bannerContainer?.visibility = View.VISIBLE
-                if (isLayout(PHONE)) {
-                    binding?.navView?.visibility = View.VISIBLE
-                    binding?.navRailView?.visibility = View.GONE
-                } else {
-                    binding?.navView?.visibility = View.GONE
-                    binding?.navRailView?.visibility = View.VISIBLE
-                }
+                binding?.bannerContainer?.isVisible = false
+                binding?.navView?.isVisible = false
+                binding?.navViewContainer?.isVisible = false
+                binding?.navRailView?.isVisible = false
             }
             if (navDestination.matchDestination(R.id.navigation_search) && !nextSearchQuery.isNullOrBlank()) {
                 bundle?.apply {

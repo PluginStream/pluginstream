@@ -82,6 +82,7 @@
             android:id="@+id/cast_mini_controller_holder"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:background="#FF000000"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/nav_rail_view"
@@ -102,7 +103,8 @@
     <FrameLayout
         android:id="@+id/banner_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:background="#FF000000" />
     </LinearLayout>
 
     <!-- keep focus outline on top -->

@@ -97,6 +97,11 @@ import com.lagradost.cloudstream3.utils.getImageFromDrawable
 import com.lagradost.cloudstream3.utils.setText
 import com.lagradost.cloudstream3.utils.setTextHtml
 import com.lagradost.cloudstream3.utils.txt
+import android.graphics.Bitmap
+import androidx.core.content.FileProvider
+import androidx.core.graphics.drawable.toBitmap
+import java.io.File
+import java.io.FileOutputStream
 import java.net.URLEncoder
 import kotlin.math.roundToInt
 
@@ -931,12 +936,34 @@ open class ResultFragmentPhone : FullScreenPlayer() {
 
                         resultShare.setOnClickListener {
                             try {
-                                val i = Intent(Intent.ACTION_SEND)
-                                i.type = "text/plain"
-                                val shareMessage = "${d.title}\n\n${d.posterImage ?: ""}\n\nPluginStream free & fast movie streaming app and all OTT like Netflix, Prime, HBO, Disney, Hotstar and many more latest movies and TV series free watch without any cost\n\nDownload Link: https://pluginstream.pages.dev"
-                                i.putExtra(Intent.EXTRA_SUBJECT, d.title)
-                                i.putExtra(Intent.EXTRA_TEXT, shareMessage)
-                                startActivity(Intent.createChooser(i, d.title))
+                                val shareMessage = "🚀 *Stream Unlimited Movies & Shows – Ad-Free!*\n\nExperience the next-gen *PluginStream Max.* No subscriptions, no hidden fees—just pure entertainment.\n\n🎥 *Now Watching:* ${d.title}\n\n🌐 *Download Now:* https://pluginstream.pages.dev\n🛡 *Join Official Community:* https://t.me/pluginstreamofficial (Official APK available here for easy download)\n\nEnjoy high-speed streaming without limits.\n\n❎ ~Netflix | Prime | HBO | Disney+~\n✅ *PluginStream Max* (Everything in ONE place!)"
+                                val intent = Intent(Intent.ACTION_SEND)
+
+                                val bitmap = resultBinding?.resultPoster?.drawable?.toBitmap()
+                                if (bitmap != null) {
+                                    val cachePath = File(requireContext().cacheDir, "images")
+                                    cachePath.mkdirs()
+                                    val file = File(cachePath, "image.png")
+                                    val stream = FileOutputStream(file)
+                                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                                    stream.close()
+
+                                    val contentUri = FileProvider.getUriForFile(
+                                        requireContext(),
+                                        "${requireContext().packageName}.provider",
+                                        file
+                                    )
+
+                                    intent.type = "image/*"
+                                    intent.putExtra(Intent.EXTRA_STREAM, contentUri)
+                                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                } else {
+                                    intent.type = "text/plain"
+                                }
+
+                                intent.putExtra(Intent.EXTRA_SUBJECT, d.title)
+                                intent.putExtra(Intent.EXTRA_TEXT, shareMessage)
+                                startActivity(Intent.createChooser(intent, d.title))
                             } catch (e: Exception) {
                                 logError(e)
                             }

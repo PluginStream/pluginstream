@@ -15,5 +15,6 @@
 		android:id="@+id/banner_container"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:background="#FF000000"
 		android:layout_alignParentBottom="true"/>
 </RelativeLayout>

@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="48dp"
                 android:gravity="center"
-                android:text="Follow for Updates &amp; Support"
+                android:text="Join Telegram Official Channel"
                 android:textColor="@android:color/white"
                 android:textSize="22sp"
                 android:fontFamily="@font/google_sans"
@@ -48,7 +48,7 @@
                 android:layout_marginTop="12dp"
                 android:layout_marginHorizontal="24dp"
                 android:gravity="center"
-                android:text="Stay connected for the latest features, news, and support on our official channel."
+                android:text="Join for daily high-speed streaming updates!"
                 android:textColor="#DDFFFFFF"
                 android:textSize="15sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -56,13 +56,13 @@
                 app:layout_constraintTop_toBottomOf="@id/heading" />
 
             <CheckBox
-                android:id="@+id/already_followed_checkbox"
+                android:id="@+id/already_joined_checkbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="I already followed"
+                android:text="I already joined"
                 android:textColor="@android:color/white"
-                android:buttonTint="#4285F4"
+                android:buttonTint="#24A1DE"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -70,22 +70,22 @@
                 tools:visibility="visible" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/follow_button"
+                android:id="@+id/join_button"
                 android:layout_width="0dp"
                 android:layout_height="60dp"
                 android:layout_marginTop="24dp"
-                android:background="@drawable/instagram_button_bg"
+                android:background="@drawable/telegram_button_bg"
                 app:backgroundTint="@null"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
-                android:text="FOLLOW NOW"
+                android:text="JOIN NOW"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:cornerRadius="30dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/already_followed_checkbox"
+                app:layout_constraintTop_toBottomOf="@id/already_joined_checkbox"
                 app:layout_constraintWidth_percent="0.8" />
 
 
@@ -94,7 +94,7 @@
     </com.google.android.material.card.MaterialCardView>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/instagram_icon_card"
+        android:id="@+id/telegram_icon_card"
         android:layout_width="64dp"
         android:layout_height="64dp"
         app:cardCornerRadius="18dp"
@@ -108,9 +108,10 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/instagram_icon_bg"
+            android:background="@drawable/telegram_icon_bg"
             android:padding="16dp"
-            android:src="@drawable/ic_instagram_white" />
+            android:src="@drawable/ic_telegram_logo"
+            app:tint="@android:color/white" />
     </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -252,6 +252,16 @@ class SettingsFragment : BaseFragment<MainSettingsBinding>(
                 }
             }
 
+            settingsTelegram.setOnClickListener {
+                try {
+                    val i = Intent(Intent.ACTION_VIEW)
+                    i.data = Uri.parse("https://t.me/pluginstreamofficial")
+                    startActivity(i)
+                } catch (e: Exception) {
+                    logError(e)
+                }
+            }
+
             settingsInstagram.setOnClickListener {
                 try {
                     val i = Intent(Intent.ACTION_VIEW)
@@ -279,7 +289,7 @@ class SettingsFragment : BaseFragment<MainSettingsBinding>(
                     i.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_plugin))
                     i.putExtra(
                         Intent.EXTRA_TEXT,
-                        "watch free unlimited movie witout any subscription 100% free watch\nhttps://pluginstream.pages.dev"
+                        "🚀 *Stream Unlimited Movies & Shows – Ad-Free!*\n\nExperience the next-gen *PluginStream Max.* No subscriptions, no hidden fees—just pure entertainment.\n\n🌐 *Download Now:* https://pluginstream.pages.dev\n🛡 *Join Official Community:* https://t.me/pluginstreamofficial (Official APK available here for easy download)\n\nEnjoy high-speed streaming without limits.\n\n❎ ~Netflix | Prime | HBO | Disney+~\n✅ *PluginStream Max* (Everything in ONE place!)"
                     )
                     startActivity(Intent.createChooser(i, getString(R.string.share_plugin)))
                 } catch (e: Exception) {
@@ -288,7 +298,7 @@ class SettingsFragment : BaseFragment<MainSettingsBinding>(
             }
 
             if (isLayout(TV)) {
-                listOf(settingsGithub, settingsInstagram, settingsDevWebsite, settingsShare).forEach {
+                listOf(settingsGithub, settingsTelegram, settingsInstagram, settingsDevWebsite, settingsShare).forEach {
                     it.isFocusable = true
                     it.isFocusableInTouchMode = true
                 }

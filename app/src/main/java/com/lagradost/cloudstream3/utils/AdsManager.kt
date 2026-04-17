@@ -21,35 +21,40 @@ object AdsManager {
     private const val INTERSTITIAL_AD_PLACEMENT_ID = "Interstitial_Android"
     private const val TEST_MODE = false
 
-    private var bannerView: BannerView? = null
-    private var pendingBannerRequest: (() -> Unit)? = null
     private val handler = android.os.Handler(android.os.Looper.getMainLooper())
-    private const val BANNER_REFRESH_INTERVAL = 30 * 1000L // 30 seconds
+    private const val BANNER_REFRESH_INTERVAL = 20 * 1000L // Reduced to 20 seconds for more impressions
+    private const val BANNER_RETRY_INTERVAL = 3000L // 3 seconds retry as requested
+    private const val PRELOAD_RETRY_INTERVAL = 5000L // 5 seconds for full-screen ads preload retry
 
+    private var bannerView: BannerView? = null
+    private var isBannerLoading = false
+    private var pendingBannerRequest: (() -> Unit)? = null
+    
     private var currentBannerContainer: android.view.ViewGroup? = null
     private var currentActivity: Activity? = null
 
     private val refreshRunnable = object : Runnable {
         override fun run() {
-            currentActivity?.let { activity ->
-                currentBannerContainer?.let { container ->
-                    loadBannerAd(activity, container)
-                }
+            if (currentActivity != null && currentBannerContainer != null && !isBannerLoading) {
+                loadBannerAd(currentActivity!!, currentBannerContainer!!)
             }
-            // Normal refresh interval
             handler.postDelayed(this, BANNER_REFRESH_INTERVAL)
         }
     }
 
     private val bannerRetryRunnable = Runnable {
-        currentActivity?.let { activity ->
-            currentBannerContainer?.let { container ->
-                loadBannerAd(activity, container)
-            }
+        if (currentActivity != null && currentBannerContainer != null && UnityAds.isInitialized) {
+            loadBannerAd(currentActivity!!, currentBannerContainer!!)
         }
     }
 
     fun initialize(context: Context) {
+        if (UnityAds.isInitialized) {
+            preloadRewardedAd()
+            preloadInterstitialAd()
+            return
+        }
+
         UnityAds.initialize(context, UNITY_GAME_ID, TEST_MODE, object : IUnityAdsInitializationListener {
             override fun onInitializationComplete() {
                 // Preload rewarded and interstitial ads (doesn't need Activity context for load)
@@ -67,16 +72,35 @@ object AdsManager {
     }
 
     private fun preloadRewardedAd() {
+        if (!UnityAds.isInitialized) return
         UnityAds.load(REWARDED_AD_PLACEMENT_ID, object : IUnityAdsLoadListener {
-            override fun onUnityAdsAdLoaded(placementId: String?) {}
-            override fun onUnityAdsFailedToLoad(placementId: String?, error: UnityAds.UnityAdsLoadError?, message: String?) {}
+            override fun onUnityAdsAdLoaded(placementId: String?) {
+                // Ad loaded successfully
+            }
+            override fun onUnityAdsFailedToLoad(placementId: String?, error: UnityAds.UnityAdsLoadError?, message: String?) {
+                // Fail! Retry after 5 seconds to ensure we have an ad ready
+                // Only retry if still initialized to avoid leaks/crashes
+                if (UnityAds.isInitialized) {
+                    handler.removeCallbacksAndMessages(REWARDED_AD_PLACEMENT_ID)
+                    handler.postDelayed({ preloadRewardedAd() }, REWARDED_AD_PLACEMENT_ID, PRELOAD_RETRY_INTERVAL)
+                }
+            }
         })
     }
 
     private fun preloadInterstitialAd() {
+        if (!UnityAds.isInitialized) return
         UnityAds.load(INTERSTITIAL_AD_PLACEMENT_ID, object : IUnityAdsLoadListener {
-            override fun onUnityAdsAdLoaded(placementId: String?) {}
-            override fun onUnityAdsFailedToLoad(placementId: String?, error: UnityAds.UnityAdsLoadError?, message: String?) {}
+            override fun onUnityAdsAdLoaded(placementId: String?) {
+                // Ad loaded successfully
+            }
+            override fun onUnityAdsFailedToLoad(placementId: String?, error: UnityAds.UnityAdsLoadError?, message: String?) {
+                // Fail! Retry after 5 seconds to ensure we have an ad ready
+                if (UnityAds.isInitialized) {
+                    handler.removeCallbacksAndMessages(INTERSTITIAL_AD_PLACEMENT_ID)
+                    handler.postDelayed({ preloadInterstitialAd() }, INTERSTITIAL_AD_PLACEMENT_ID, PRELOAD_RETRY_INTERVAL)
+                }
+            }
         })
     }
 
@@ -211,10 +235,14 @@ object AdsManager {
     }
 
     private fun loadBannerAd(activity: Activity, bannerContainer: android.view.ViewGroup) {
+        if (isBannerLoading) return
+        isBannerLoading = true
+
         if (bannerView == null) {
             bannerView = BannerView(activity, BANNER_AD_PLACEMENT_ID, UnityBannerSize.getDynamicSize(activity))
             val loadListener = object : BannerView.IListener {
                 override fun onBannerLoaded(bannerAdView: BannerView?) {
+                    isBannerLoading = false
                     FirebaseHelper.logAdImpression("banner", BANNER_AD_PLACEMENT_ID)
                     // Success! Remove from retry queue if it was there
                     handler.removeCallbacks(bannerRetryRunnable)
@@ -229,9 +257,10 @@ object AdsManager {
                 }
                 override fun onBannerClick(bannerAdView: BannerView?) {}
                 override fun onBannerFailedToLoad(bannerAdView: BannerView?, errorInfo: BannerErrorInfo?) {
-                    // Fail! Schedule a faster retry (5 seconds)
+                    isBannerLoading = false
+                    // Fail! Schedule a faster retry (3 seconds as requested)
                     handler.removeCallbacks(bannerRetryRunnable)
-                    handler.postDelayed(bannerRetryRunnable, 5000)
+                    handler.postDelayed(bannerRetryRunnable, BANNER_RETRY_INTERVAL)
                 }
                 override fun onBannerShown(bannerAdView: BannerView?) {}
                 override fun onBannerLeftApplication(bannerView: BannerView?) {}

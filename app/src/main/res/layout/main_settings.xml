@@ -248,11 +248,31 @@
                 app:cardBackgroundColor="?attr/primaryGrayBackground">
 
                 <TextView
+                    android:id="@+id/settings_telegram"
+                    style="@style/SettingsItem"
+                    android:paddingVertical="16dp"
+                    android:drawableStart="@drawable/ic_telegram_logo"
+                    android:drawablePadding="16dp"
+                    android:drawableTint="?attr/textColor"
+                    android:text="@string/telegram" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="1dp"
+                app:strokeWidth="0dp"
+                app:cardBackgroundColor="?attr/primaryGrayBackground">
+
+                <TextView
                     android:id="@+id/settings_instagram"
                     style="@style/SettingsItem"
                     android:paddingVertical="16dp"
                     android:drawableStart="@drawable/ic_instagram_logo"
                     android:drawablePadding="16dp"
+                    android:drawableTint="?attr/textColor"
                     android:text="@string/instagram" />
             </com.google.android.material.card.MaterialCardView>
 

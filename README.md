@@ -1,18 +1,18 @@
-# 🎬 PluginStream - Ultimate Multi-Source Entertainment Hub
+# 🎬 PluginStream Max - Ultimate Multi-Source Entertainment Hub
 
 <p align="center">
-  <a href="https://am-abdulmueed.vercel.app/pluginstream">
+  <a href="https://pluginstream.pages.dev">
     <img src="https://img.shields.io/badge/DOWNLOAD-APK_NOW-blue?style=for-the-badge&logo=android&logoColor=white" alt="Download APK" height="40">
   </a>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/github/downloads/maxrave-dev/SimpMusic/total?style=flat-square&color=blue&label=TOTAL%20DOWNLOADS" />
-  <img src="https://img.shields.io/badge/Version-2.0.7-green?style=flat-square" />
-  <img src="https://img.shields.io/badge/Platform-Android-orange?style=flat-square" />
+  <img src="https://img.shields.io/badge/Version-5.0.0-green?style=flat-square&logo=github" />
+  <img src="https://img.shields.io/badge/Platform-Android-orange?style=flat-square&logo=android" />
+  <img src="https://img.shields.io/badge/Security-0%2F95%20Clean-brightgreen?style=flat-square&logo=virustotal" />
 </p>
 
-PluginStream is a high-performance, lightweight Android application designed to aggregate premium streaming platforms into a single interface. The app acts as a powerful "Shell"—it does not host any content itself but uses a sophisticated **Plugin & Extension architecture** to provide access to movies, series, and live TV from across the web.
+**PluginStream Max** is a high-performance, lightweight Android application designed to aggregate premium streaming platforms into a single interface. It uses a sophisticated **Plugin & Extension architecture** to provide ad-free access to movies, series, and live TV.
 
 ---
 
@@ -20,10 +20,8 @@ PluginStream is a high-performance, lightweight Android application designed to 
 - [Screenshots](#-screenshots)
 - [Key Features](#-key-features)
 - [Download & Installation](#-download--installation)
-- [Quick Start Guide](#-quick-start-guide)
-- [Configuration](#-configuration)
+- [Security Verification](#-security-first)
 - [Performance Metrics](#-performance-metrics)
-- [Legal Disclaimer](#-legal-disclaimer)
 - [Contact & Support](#-contact--support)
 
 ---
@@ -34,61 +32,51 @@ PluginStream is a high-performance, lightweight Android application designed to 
   <img src="images/1.png" width="180" /> 
   <img src="images/2.png" width="180" /> 
   <img src="images/3.png" width="180" /> 
-  <img src="images/4.png" width="180" /> 
+  <img src="images/4.png" width="180" />
   <img src="images/5.png" width="180" />
-  <img src="images/6.png" width="180" /> 
-  <img src="images/7.png" width="180" /> 
-  <img src="images/8.png" width="180" /> 
-  <img src="images/9.png" width="180" /> 
 </p>
+
 ---
 
-## 🚀 Key Features
+## 🚀 Key Features (v5.0.0 Updates)
 
-### 1. Multi-Repository Support
-* **Modular Architecture:** Similar to PluginStream, you can add any external repository (.json) to unlock thousands of streaming sources.
-* **Auto-Sync:** Extensions update automatically in the background to ensure links remain active and working.
-* **Custom Repos:** Add unlimited repositories from community developers and creators.
+### 1. The "Max" Powerhouse
+* **Unified Library:** Merges all major streaming providers into one single, powerful section.
+* **Auto-Sync:** Extensions update automatically to ensure working links 24/7.
 
-### 2. Global Content Reach
-* **Regional Specialists:** Dedicated support for Hindi, Urdu, and English sources (Bollyflix, VegaMovies, 9kMovies, etc.).
-* **Premium Mirrors:** Access mirrors for major platforms like Netflix, Disney+, and Prime Video.
-* **Live Sports & IPTV:** Integrated support for IPTV playlists and live sports sources (CricHD, DaddyLive).
+### 2. Zero-Ad Experience
+* **Built-in AdBlocker:** Advanced filtering that strips intrusive ads and trackers from 3rd-party links.
+* **No Login Required:** Privacy-first approach. No account, no tracking.
 
 ### 3. Advanced Media Player
-* **Subtitle Integration:** Built-in OpenSubtitles support and custom local subtitle files.
-* **Dynamic Quality:** Choose from 360p to 4K resolutions.
-* **Offline Mode:** Download movies and episodes directly to your device.
-* **Chromecast Support:** Stream to smart TVs and Cast devices seamlessly.
-
-### 4. Zero-Ad Experience
-* **Built-in AdBlocker:** Advanced filtering that strips intrusive ads and trackers from 3rd-party stream links.
-* **Real-time Threat Detection:** Identifies and blocks malicious redirects.
+* **Dynamic Quality:** Stream from 360p to 4K resolutions.
+* **Subtitle Support:** Built-in OpenSubtitles integration.
+* **Chromecast:** Stream to Smart TVs seamlessly.
 
 ---
 
 ## 📥 Download & Installation
 
-### Stable Release
-You can download the latest stable version (70MB) from the official distribution page:
+👉 **[Download PluginStream Max APK](https://pluginstream.pages.dev)**
 
-👉 **[Download PluginStream APK](https://am-abdulmueed.vercel.app/pluginstream)**
-
-### Installation Steps
-1. **Enable Unknown Sources:** `Settings` → `Security` → `Unknown Sources`
-2. **Download the APK:** From the link above.
-3. **Install & Launch:** Open the file and tap `Install`.
+### Quick Steps:
+1. **Enable Unknown Sources** in your Android settings.
+2. **Download & Install** the APK from our official site.
+3. **Join Telegram** for the latest plugins and updates.
 
 ---
 
-## ⚙️ Configuration
+---
+### 🛡️ Security First
+This APK is verified and 100% safe to install. No malware, no trackers.
 
-### Advanced Settings
-| Setting | Description | Default |
-|---------|-------------|---------|
-| **Auto-Update** | Enable automatic extension updates | ON |
-| **Quality Preference** | Default streaming quality | 720p |
-| **Cache Size** | Maximum cache storage | 2GB |
+<p align="center">
+  <a href="https://www.virustotal.com/gui/file/2caee46a7d76043619269983bbdaf50626c76eeba0e18cc36fcc9b78f5ec87c5/detection">
+    <img src="https://img.shields.io/badge/VirusTotal-Clean%200%2F95-brightgreen?style=for-the-badge&logo=virustotal" alt="VirusTotal Report">
+  </a>
+</p>
+
+---
 
 ---
 
@@ -98,19 +86,14 @@ You can download the latest stable version (70MB) from the official distribution
 | **App Size** | ~70MB |
 | **Startup Time** | <2 seconds |
 | **Memory Usage** | 80-150MB |
-| **Battery Impact** | ~3% per hour streaming |
-
----
-
-## ⚖️ Legal Disclaimer
-**PluginStream** is a functional "Aggregator" and "Parser." It does not host, store, or distribute any media files or copyrighted content. Users are solely responsible for complying with their local copyright laws.
+| **Status** | Stable ✅ |
 
 ---
 
 ## 📫 Contact & Support
+* **Official Website:** [pluginstream.pages.dev](https://pluginstream.pages.dev)
+* **Telegram Channel:** [@pluginstreamofficial](https://t.me/pluginstreamofficial)
+* **Support Group:** [PluginStream Support](https://t.me/pluginstreamsupport)
 * **Developer:** Abdul Mueed
-* **Portfolio:** [am-abdulmueed.vercel.app](https://am-abdulmueed.vercel.app)
-* **GitHub Issues:** [Report Bugs](https://github.com/am-abdulmueed/pluginstream/issues)
-* **Telegram Community:** [Join Group](https://t.me/pluginstream)
 
-**Made with ❤️ by Abdul Mueed** | **Last Updated:** March 2026
+**Made with ❤️ by Abdul Mueed** | **Last Updated:** April 2026
